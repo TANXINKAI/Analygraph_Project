@@ -5,34 +5,18 @@ from operator import le
 import numpy as np
 
 # process image
-import PIL
-from PIL import Image as im
-
 # Importing the OpenCV library, CV2 support Numpy, Speed
 import cv2
 
-
-# class Analygraph(Enum):
-#     true_analygraph = 1
-#     gray_analygraph = 2
-#     color_analygraph = 3
-#     half_color_analygraph = 4
-#     three_D_TV_optimized_analygraph = 5
-#     DuBois_analygraph = 6
-#     Roscolux_analygraph = 7
-
 class Analygraph:
-    def __init__(self, name, rgb_l, rgb_r):
+    def __init__(self, name):
         self.name = name
-        self.leftrgb = rgb_l
-        self.rightrgb = rgb_r
         self.rgb = 0
-    def print_rgb(self):
-        print(self.rgb)
+   
 
 class true_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "true_analygraph"
 
@@ -44,11 +28,9 @@ class true_analygraph(Analygraph):
                     [0, 0, 0],
                     [0.299, 0.587, 0.114]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-   
 class gray_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "gray_analygraph"
 
@@ -60,11 +42,9 @@ class gray_analygraph(Analygraph):
                     [0.299, 0.587, 0.114],
                     [0.299, 0.587, 0.114]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-    
 class color_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "color_analygraph"
 
@@ -76,11 +56,9 @@ class color_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-    
 class color_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "color_analygraph"
 
@@ -92,12 +70,10 @@ class color_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-    
 class half_color_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
-        
+    def __init__(self, name):
+        super().__init__(name)
+
         self.type = "half_color_analygraph"
 
         self.Ml = np.array([[0.299, 0.587, 0.114], 
@@ -108,11 +84,9 @@ class half_color_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-
 class three_D_TV_optimized_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "three_D_TV_optimized_analygraph"
 
@@ -124,11 +98,10 @@ class three_D_TV_optimized_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-    
+      
 class Roscolux_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "Roscolux_analygraph"
 
@@ -140,11 +113,10 @@ class Roscolux_analygraph(Analygraph):
                     [0.0184, 0.1807, 0.0458],
                     [0.0268, 0.0991, 0.7662]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
- 
+       
 class DuBois_analygraph(Analygraph):
-    def __init__(self, name, rgb_l, rgb_r):
-        super().__init__(name, rgb_l, rgb_r)
+    def __init__(self, name):
+        super().__init__(name)
         
         self.type = "DuBois_analygraph"
 
@@ -156,8 +128,7 @@ class DuBois_analygraph(Analygraph):
                     [0.377, 0.761, 0.009],
                     [-0.026, -0.093, 1.234]])
 
-        self.rgb = np.add(np.matmul(self.leftrgb, self.Ml), np.matmul(self.rightrgb, self.Mr))
-    
+       
 def rgb(analygraph, l_rgb, r_rgb):
     return np.add(np.matmul(analygraph.Ml,l_rgb), np.matmul(analygraph.Mr, r_rgb))
 
@@ -230,9 +201,6 @@ def main():
     
     pixel_arr = [a,b,c,d,e,f,g]
 
-    a.print_rgb()
-    b.print_rgb()
-    
     tries = 3
 
     while(tries):
