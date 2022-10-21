@@ -1,5 +1,3 @@
-from enum import Enum
-from operator import le
 # Matrix manipulation
 # stable and fast array processing library
 import numpy as np
@@ -8,13 +6,12 @@ import numpy as np
 # Importing the OpenCV library, CV2 support Numpy, Speed
 import cv2
 
-class Analygraph:
+cdef class Analygraph:
     def __init__(self, name):
         self.name = name
-        self.rgb = 0
    
 
-class true_analygraph(Analygraph):
+cdef class true_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -28,7 +25,7 @@ class true_analygraph(Analygraph):
                     [0, 0, 0],
                     [0.299, 0.587, 0.114]])
 
-class gray_analygraph(Analygraph):
+cdef class gray_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -42,7 +39,7 @@ class gray_analygraph(Analygraph):
                     [0.299, 0.587, 0.114],
                     [0.299, 0.587, 0.114]])
 
-class color_analygraph(Analygraph):
+cdef class color_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -56,21 +53,7 @@ class color_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-class color_analygraph(Analygraph):
-    def __init__(self, name):
-        super().__init__(name)
-        
-        self.type = "color_analygraph"
-
-        self.Ml = np.array([[1, 0, 0], 
-                    [0, 0, 0],
-                    [0, 0, 0]])
-
-        self.Mr = np.array([[0, 0, 0],
-                    [0, 1, 0],
-                    [0, 0, 1]])
-
-class half_color_analygraph(Analygraph):
+cdef class half_color_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
 
@@ -84,7 +67,7 @@ class half_color_analygraph(Analygraph):
                     [0, 1, 0],
                     [0, 0, 1]])
 
-class three_D_TV_optimized_analygraph(Analygraph):
+cdef class three_D_TV_optimized_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -99,7 +82,7 @@ class three_D_TV_optimized_analygraph(Analygraph):
                     [0, 0, 1]])
 
       
-class Roscolux_analygraph(Analygraph):
+cdef class Roscolux_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -114,7 +97,7 @@ class Roscolux_analygraph(Analygraph):
                     [0.0268, 0.0991, 0.7662]])
 
        
-class DuBois_analygraph(Analygraph):
+cdef class DuBois_analygraph(Analygraph):
     def __init__(self, name):
         super().__init__(name)
         
@@ -129,12 +112,19 @@ class DuBois_analygraph(Analygraph):
                     [-0.026, -0.093, 1.234]])
 
        
-def rgb(analygraph, l_rgb, r_rgb):
+cpdef rgb(analygraph, l_rgb, r_rgb):
     return np.add(np.matmul(analygraph.Ml,l_rgb), np.matmul(analygraph.Mr, r_rgb))
 
-def get_analygraph(left_img,right_img, analygraph_type, out):
-    for i in range(left_img.shape[0]):
-                for j in range(left_img.shape[1]):
+cpdef void get_analygraph(unsigned char [:, :] left_img, unsigned char [:, :] right_img, unsigned char [:, :, :] out, Analygraph analygraph_type):
+# def get_analygraph(left_img,right_img, analygraph_type, out):
+   
+    # set the variable extension types
+    cdef int i, j, w, h
+    h = left_img.shape[0]
+    w = left_img.shape[1]
+
+    for i in range(h):
+                for j in range(w):
                     out[i,j] = rgb(analygraph_type, left_img[i,j], right_img[i,j])
 
 def split_image(image, orient):
@@ -160,21 +150,20 @@ def split_image(image, orient):
 
 
 def main():
-    # Reading the image using imread() function
-    image = cv2.imread('image.jpeg')
+    image = cv2.imread('/Users/tanxinkai/Desktop/Analygraph_Project/Analygraph_Project/image.jpeg')
     
-    # Extracting the height and width of an image
     h, w = image.shape[:2]
-    # Displaying the height and width
-    print("Height = {},  Width = {}".format(h, w))
+
+    # Display height and width
+    # print("Height = {},  Width = {}".format(h, w))
 
     l, r = split_image(image,1)
 
     # save image
-    status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/left_image.jpeg',l) 
-    print("Image written to file-system : ",status)
-    status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/right_image.jpeg',r)
-    print("Image written to file-system : ",status)
+    left_status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/Analygraph_Project/left_image.jpeg',l) 
+    print("Image saved :  : ",left_status)
+    right_status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/Analygraph_Project/right_image.jpeg',r)
+    print("Image saved :  : ",right_status)
 
 
     h, w = l.shape[:2]
@@ -189,15 +178,15 @@ def main():
     # print(f"r.shape[0] is {r.shape[0]}")
     # print(f"r.shape[1] is {r.shape[1]}")
 
-    test_rgbL = np.array([[1,1,250]])
-    test_rgbR = np.array([[0,0,255]])
-    a = true_analygraph("a", test_rgbL, test_rgbR)
-    b = color_analygraph("b", test_rgbL, test_rgbR)
-    c = gray_analygraph("c", test_rgbL, test_rgbR)
-    d = half_color_analygraph("d", test_rgbL, test_rgbR)
-    e = three_D_TV_optimized_analygraph("e", test_rgbL, test_rgbR)
-    f = DuBois_analygraph("f", test_rgbL, test_rgbR)
-    g = Roscolux_analygraph("g", test_rgbL, test_rgbR)
+    # test_rgbL = np.array([[1,1,250]])
+    # test_rgbR = np.array([[0,0,255]])
+    a = true_analygraph("a")
+    b = color_analygraph("b")
+    c = gray_analygraph("c")
+    d = half_color_analygraph("d")
+    e = three_D_TV_optimized_analygraph("e")
+    f = DuBois_analygraph("f")
+    g = Roscolux_analygraph("g")
     
     pixel_arr = [a,b,c,d,e,f,g]
 
@@ -212,11 +201,11 @@ def main():
             val = pixel_arr[choice]
 
             # fill image by pixels
-            get_analygraph(l, r, val, ans)
+            get_analygraph(l, r, ans, val)
            
     
             status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/analygraph.jpeg',ans) 
-            print("Image written to file-system : ",status)
+            print("Image saved :  : ",status)
         elif(choice == -1):
             break
         else:

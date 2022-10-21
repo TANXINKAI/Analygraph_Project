@@ -1,5 +1,3 @@
-from enum import Enum
-from operator import le
 # Matrix manipulation
 # stable and fast array processing library
 import numpy as np
@@ -11,7 +9,6 @@ import cv2
 class Analygraph:
     def __init__(self, name):
         self.name = name
-        self.rgb = 0
    
 
 class true_analygraph(Analygraph):
@@ -41,20 +38,6 @@ class gray_analygraph(Analygraph):
         self.Mr = np.array([[0, 0, 0],
                     [0.299, 0.587, 0.114],
                     [0.299, 0.587, 0.114]])
-
-class color_analygraph(Analygraph):
-    def __init__(self, name):
-        super().__init__(name)
-        
-        self.type = "color_analygraph"
-
-        self.Ml = np.array([[1, 0, 0], 
-                    [0, 0, 0],
-                    [0, 0, 0]])
-
-        self.Mr = np.array([[0, 0, 0],
-                    [0, 1, 0],
-                    [0, 0, 1]])
 
 class color_analygraph(Analygraph):
     def __init__(self, name):
@@ -138,6 +121,7 @@ def get_analygraph(left_img,right_img, analygraph_type, out):
                     out[i,j] = rgb(analygraph_type, left_img[i,j], right_img[i,j])
 
 def split_image(image, orient):
+    print("image split")
     joined_img = image
     h, w = joined_img.shape[:2]
     
@@ -157,25 +141,22 @@ def split_image(image, orient):
 
 
 
-
-
 def main():
     # Reading the image using imread() function
     image = cv2.imread('image.jpeg')
     
-    # Extracting the height and width of an image
+    # Extracting the height and width of original image
     h, w = image.shape[:2]
-    # Displaying the height and width
-    print("Height = {},  Width = {}".format(h, w))
+    # Display height and width
+    # print("Height = {},  Width = {}".format(h, w))
 
     l, r = split_image(image,1)
 
     # save image
-    status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/left_image.jpeg',l) 
-    print("Image written to file-system : ",status)
-    status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/right_image.jpeg',r)
-    print("Image written to file-system : ",status)
-
+    left_status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/Analygraph_Project/left_image.jpeg',l) 
+    print("Image saved :  : ",left_status)
+    right_status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/Analygraph_Project/right_image.jpeg',r)
+    print("Image saved :  : ",right_status)
 
     h, w = l.shape[:2]
     print(h,w)
@@ -183,21 +164,14 @@ def main():
     # initialise new image
     ans = np.zeros((h,w,3), np.uint8)
 
-    # print(f"l.shape[0] is {l.shape[0]}")
-    # print(f"l.shape[1] is {l.shape[1]}")
 
-    # print(f"r.shape[0] is {r.shape[0]}")
-    # print(f"r.shape[1] is {r.shape[1]}")
-
-    test_rgbL = np.array([[1,1,250]])
-    test_rgbR = np.array([[0,0,255]])
-    a = true_analygraph("a", test_rgbL, test_rgbR)
-    b = color_analygraph("b", test_rgbL, test_rgbR)
-    c = gray_analygraph("c", test_rgbL, test_rgbR)
-    d = half_color_analygraph("d", test_rgbL, test_rgbR)
-    e = three_D_TV_optimized_analygraph("e", test_rgbL, test_rgbR)
-    f = DuBois_analygraph("f", test_rgbL, test_rgbR)
-    g = Roscolux_analygraph("g", test_rgbL, test_rgbR)
+    a = true_analygraph("a")
+    b = color_analygraph("b")
+    c = gray_analygraph("c")
+    d = half_color_analygraph("d")
+    e = three_D_TV_optimized_analygraph("e")
+    f = DuBois_analygraph("f")
+    g = Roscolux_analygraph("g")
     
     pixel_arr = [a,b,c,d,e,f,g]
 
@@ -207,7 +181,7 @@ def main():
         print("[-1]" + "   " + "Exit")
         for x in range(len(pixel_arr)):
             print("[" + str(x) + "]" + "   " + pixel_arr[x].type)
-        choice = int(input('Choose a type \n'))
+        choice = int(input('Input Analygraph type \n'))
         if(choice >= 0 and choice <= 6):
             val = pixel_arr[choice]
 
