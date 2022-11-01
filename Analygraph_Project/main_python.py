@@ -31,13 +31,14 @@ class gray_analygraph(Analygraph):
         
         self.type = "gray_analygraph"
 
-        self.Ml = np.array([[0.299, 0.587, 0.114], 
-                    [0, 0, 0],
-                    [0, 0, 0]])
+        self.Ml = np.array([[0.114, 0.587, 0.299],
+                    [0, 0, 0], 
+                    [0, 0, 0]
+                    ])
 
         self.Mr = np.array([[0, 0, 0],
-                    [0.299, 0.587, 0.114],
-                    [0.299, 0.587, 0.114]])
+                    [0.114, 0.587, 0.299],
+                    [0.114, 0.587, 0.299]])
 
 class color_analygraph(Analygraph):
     def __init__(self, name):
@@ -143,7 +144,7 @@ def split_image(image, orient):
 
 def main():
     # Reading the image using imread() function
-    image = cv2.imread('image.jpeg')
+    image = cv2.imread('Analygraph_Project/image.jpeg')
     
     # Extracting the height and width of original image
     h, w = image.shape[:2]
@@ -177,6 +178,9 @@ def main():
 
     tries = 3
 
+    print(l[0,0])
+    print(r[0,0])
+
     while(tries):
         print("[-1]" + "   " + "Exit")
         for x in range(len(pixel_arr)):
@@ -186,10 +190,12 @@ def main():
             val = pixel_arr[choice]
 
             # fill image by pixels
+            print(val.Ml)
+            print(val.Mr)
             get_analygraph(l, r, val, ans)
            
-    
-            status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/analygraph.jpeg',ans) 
+            
+            status = cv2.imwrite('/Users/tanxinkai/Desktop/Analygraph_Project/nemo.jpeg',ans) 
             print("Image written to file-system : ",status)
         elif(choice == -1):
             break
@@ -197,6 +203,7 @@ def main():
             print("Choice out of range")
         tries-=1
     
+    print(ans[0,0])
     print("exiting program")
     
 if __name__ == "__main__":
